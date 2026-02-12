@@ -1,0 +1,5 @@
+# Copy this file to key.properties and fill values to enable release signing
+storePassword=<keystore-password>
+keyPassword=<key-password>
+keyAlias=elaraluma
+storeFile=C:\Users\<username>\elaraluma-key.jks
