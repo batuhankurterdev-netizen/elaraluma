@@ -60,3 +60,10 @@ jobs:
         with:
           name: app-release-aab
           path: build/app/outputs/bundle/release/app-release.aab
+
+      - name: Upload generated keystore
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-keystore
+          path: keystore.jks
