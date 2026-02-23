@@ -24,7 +24,7 @@ jobs:
           flutter-version: 'stable'
 
       - name: Decode keystore
-        if: secrets.KEYSTORE_BASE64 != ''
+        if: ${{ hashFiles('**/keystore.jks') != '' }}
         run: |
           echo "$KEYSTORE_BASE64" | base64 --decode > android/key.jks
         env:
