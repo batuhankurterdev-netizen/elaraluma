@@ -1,7 +1,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.elaraluma">
-    <!-- Flutter needs it to communicate with the running application
-         to allow setting breakpoints, to provide hot reload, etc.
-    -->
+    package="com.batuhankurter.elaraluma">
+
     <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!-- AdMob için -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <application
+        android:label="Elaraluma"
+        android:icon="@mipmap/ic_launcher">
+
+        <!-- AdMob App ID -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-1661750317640188~5214542776"/>
+
+    </application>
 </manifest>
