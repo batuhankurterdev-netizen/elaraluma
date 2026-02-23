@@ -15,32 +15,14 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          # Ses paketleri ve AGP 8.1 için Java 17 gereklidir
+          distribution: 'oracle'
           java-version: '17'
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          # Sürümü sabitleyerek "Unable to determine version" hatasını çözüyoruz
-          flutter-version: '3.24.0'
+          flutter-version: '3.24.5'
           channel: 'stable'
-
-      - name: Decode keystore
-        # Sadece KEYSTORE_BASE64 varsa çalışır, yoksa bu adımı atlar
-        if: ${{ secrets.KEYSTORE_BASE64 != '' }}
-        run: |
-          echo "$KEYSTORE_BASE64" | base64 --decode > android/app/key.jks
-        env:
-          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
-
-      - name: Write key.properties
-        if: ${{ secrets.KEYSTORE_PASSWORD != '' }}
-        run: |
-          echo "storeFile=key.jks" > android/key.properties
-          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" >> android/key.properties
-          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
-          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
 
       - name: Flutter clean & pub get
         run: |
@@ -48,7 +30,11 @@ jobs:
           flutter pub get
 
       - name: Build appbundle
-        # Ses dosyaları eklediğinde simge hatası almamak için --no-tree-shake-icons iyidir
+        # Secrets hatası almamak için buradaki env kullanımına dikkat
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         run: flutter build appbundle --release --no-tree-shake-icons
 
       - name: Upload AAB
