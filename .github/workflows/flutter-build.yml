@@ -1,13 +1,15 @@
 name: Build Flutter AAB
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF8
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -15,39 +17,10 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 'stable'
+          channel: stable
 
-      - name: Install Android SDK packages
-        run: |
-          sudo apt-get update
-          yes | sdkmanager --licenses || true
-          sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.0"
-
-      - name: Ensure keytool (openjdk) available
-        run: |
-          sudo apt-get install -y openjdk-11-jdk
-          java -version
-
-      - name: Use provided keystore or generate one
-        run: |
-          if [ -n "${{ secrets.KEYSTORE_BASE64 }}" ]; then
-            echo "Using provided keystore from secrets"
-            echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > keystore.jks
-            echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" > key.properties
-            echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> key.properties
-            echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> key.properties
-            echo "storeFile=$(pwd)/keystore.jks" >> key.properties
-          else
-            echo "No keystore secret provided — generating temporary keystore"
-            KS_PASS=${{ secrets.KEYSTORE_PASSWORD || 'passw0rd' }}
-            KEY_ALIAS=${{ secrets.KEY_ALIAS || 'elaraluma' }}
-            KEY_PASS=${{ secrets.KEY_PASSWORD || "$KS_PASS" }}
-            keytool -genkeypair -v -keystore keystore.jks -storepass "$KS_PASS" -alias "$KEY_ALIAS" -keyalg RSA -keysize 2048 -validity 10000 -keypass "$KEY_PASS" -dname "CN=Elaraluma,OU=Dev,O=You,L=City,S=State,C=TR"
-            echo "storePassword=$KS_PASS" > key.properties
-            echo "keyPassword=$KEY_PASS" >> key.properties
-            echo "keyAlias=$KEY_ALIAS" >> key.properties
-            echo "storeFile=$(pwd)/keystore.jks" >> key.properties
-          fi
+      - name: Flutter doctor
+        run: flutter doctor
 
       - name: Flutter pub get
         run: flutter pub get
@@ -60,10 +33,3 @@ jobs:
         with:
           name: app-release-aab
           path: build/app/outputs/bundle/release/app-release.aab
-
-      - name: Upload generated keystore
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: generated-keystore
-          path: keystore.jks
