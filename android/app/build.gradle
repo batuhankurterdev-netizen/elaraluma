@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace "com.mukaddes.elaraluma"
+    namespace "com.batuhankurter.elaraluma"
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.mukaddes.elaraluma"
+        applicationId "com.batuhankurter.elaraluma"
         minSdk 21
         targetSdk 34
         versionCode 1
