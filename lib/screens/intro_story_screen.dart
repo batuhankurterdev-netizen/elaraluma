@@ -138,7 +138,7 @@ class _IntroStoryScreenState extends State<IntroStoryScreen> {
                       ElevatedButton(
                         onPressed: nextPage,
                         style: ElevatedButton.styleFrom(
-                          primary: Color(0xFF4A148C),
+                          backgroundColor: Color(0xFFFFD700),
                           padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
