@@ -27,9 +27,9 @@ jobs:
           channel: 'stable'
           cache: true
 
-      # 3️⃣ Android SDK Lisansları
+     # 3️⃣ Android SDK lisanslarını kabul et (En güvenli yöntem)
       - name: Accept Android licenses
-        run: yes | sdkmanager --licenses
+        run: yes | flutter doctor --android-licenses
 
       # 4️⃣ Bağımlılıkları Yükle
       - name: Install dependencies
