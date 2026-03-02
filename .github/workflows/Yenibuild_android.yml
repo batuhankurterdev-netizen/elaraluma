@@ -24,15 +24,16 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         run: |
-          # 1. BOŞ OLAN local.properties DOSYASINI OTOMATİK DOLDURUYORUZ
+          # 1. BOŞ OLAN DOSYAYI BURADA OTOMATİK DOLDURUYORUZ
+          # Bu satır Android'e Flutter'ın tam olarak nerede olduğunu söyler
           echo "flutter.sdk=$GITHUB_WORKSPACE/flutter" > android/local.properties
           echo "sdk.dir=/usr/local/lib/android/sdk" >> android/local.properties
           
-          # 2. HER KOMUTUN BAŞINA ./flutter/bin/ EKLEYEREK SİSTEMİ ZORLUYORUZ
+          # 2. KOMUTLARI TAM YOL İLE ÇALIŞTIRIYORUZ
           ./flutter/bin/flutter clean
           ./flutter/bin/flutter pub get
           
-          # 3. BUILD KOMUTUNU DA TAM YOL İLE ÇALIŞTIRIYORUZ
+          # 3. BUILD BAŞLAT
           ./flutter/bin/flutter build appbundle --release --no-tree-shake-icons
 
       - name: Upload Artifact
