@@ -135,8 +135,8 @@ class _MemoryGameScreenState extends State<MemoryGameScreen> {
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Color(0xFFFFD700),
-                  onPrimary: Color(0xFF4A148C),
+                  backgroundColor: Color(0xFFFFD700),
+                  foregroundColor: Color(0xFF4A148C),
                   padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
