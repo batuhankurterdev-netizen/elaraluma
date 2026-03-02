@@ -1,0 +1,24 @@
+name: Yeni Android Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Force Install 3.24.5
+        run: |
+          git clone https://github.com/flutter/flutter.git -b 3.24.5 --depth 1
+          echo "$GITHUB_WORKSPACE/flutter/bin" >> $GITHUB_PATH
+
+      - name: Build AAB
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        run: |
+          ./flutter/bin/flutter pub get
+          ./flutter/bin/flutter build appbundle --release --no-tree-shake-icons
