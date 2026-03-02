@@ -143,7 +143,7 @@ class _ColorGameScreenState extends State<ColorGameScreen> {
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Color(0xFFFFD700),
+                  backgroundColor: Color(0xFFFFD700),
                   onPrimary: Color(0xFF4A148C),
                   padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                   shape: RoundedRectangleBorder(
