@@ -1,4 +1,4 @@
-name: YeniBuild Android AAB
+name: YenBuild Android AAB
 
 on:
   workflow_dispatch:
@@ -15,7 +15,6 @@ jobs:
         run: |
           git clone https://github.com/flutter/flutter.git -b 3.24.5 --depth 1
           echo "$GITHUB_WORKSPACE/flutter/bin" >> $GITHUB_PATH
-          # Flutter SDK yolunu sisteme kaydediyoruz
           echo "FLUTTER_ROOT=$GITHUB_WORKSPACE/flutter" >> $GITHUB_ENV
 
       - name: Build appbundle
@@ -24,15 +23,15 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         run: |
-          # 1. Android'e Flutter'ın yerini tam olarak burası diye zorla öğretiyoruz
+          # 1. BOŞ OLAN local.properties DOSYASINI BURADA DİNAMİK DOLDURUYORUZ
           echo "flutter.sdk=$GITHUB_WORKSPACE/flutter" > android/local.properties
           echo "sdk.dir=/usr/local/lib/android/sdk" >> android/local.properties
           
-          # 2. BURASI EN KRİTİK NOKTA: Komutları tam yol belirterek çalıştırıyoruz
+          # 2. HER KOMUTUN BAŞINA TAM YOL EKLİYORUZ (BU ÇOK KRİTİK)
           ./flutter/bin/flutter clean
           ./flutter/bin/flutter pub get
           
-          # 3. Android kütüphanelerini senkronize etmesi için build başlatıyoruz
+          # 3. BUILD BAŞLAT (TAM YOL İLE)
           ./flutter/bin/flutter build appbundle --release --no-tree-shake-icons
 
       - name: Upload Artifact
