@@ -236,7 +236,7 @@ class _LumaColoringScreenState extends State<LumaColoringScreen> {
                   icon: Icon(Icons.check),
                   label: Text('Boyama Tamamlandı!'),
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.green,
+                    backgroundColor: Colors.green,
                     onPrimary: Colors.white,
                     padding: EdgeInsets.symmetric(vertical: 12),
                     minimumSize: Size(double.infinity, 50),
