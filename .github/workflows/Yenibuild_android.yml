@@ -1,4 +1,4 @@
-name: YBuild Android AAB
+name: YeniBuild Android AAB
 
 on:
   workflow_dispatch:
