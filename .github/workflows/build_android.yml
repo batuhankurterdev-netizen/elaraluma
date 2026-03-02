@@ -15,28 +15,30 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'oracle'
+          distribution: 'microsoft'
           java-version: '17'
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.5'
-          channel: stable
-          cache: false
-          
-      - name: Flutter clean & pub get
+          # BURASI ÇOK KRİTİK: Sürümü tırnak içinde ve net yazıyoruz
+          flutter-version: '3.24.5' 
+          channel: 'stable'
+          cache: false # Önbelleği tamamen kapatıyoruz, zorla temiz kurulum yaptıracağız
+
+      - name: Flutter Clean & Pub Get
         run: |
           flutter clean
+          flutter pub cache clean --force
           flutter pub get
 
       - name: Build appbundle
-        # Secrets hatası almamak için buradaki env kullanımına dikkat
+        # Keystore (Şifre) bilgilerini bozmadan buraya ekliyoruz:
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-        run: flutter build appbundle --release --no-tree-shake-icons
+        run: flutter build appbundle --release --no-tree-shake-icons --no-pub
 
       - name: Upload AAB
         uses: actions/upload-artifact@v4
