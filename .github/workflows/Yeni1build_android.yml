@@ -25,16 +25,18 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         run: |
-          # 1. local.properties dosyasını OTOMATİK dolduruyoruz
+          # 1. local.properties dosyasını temiz ve kesin yollarla oluştur
           echo "flutter.sdk=$GITHUB_WORKSPACE/flutter" > android/local.properties
           echo "sdk.dir=/usr/local/lib/android/sdk" >> android/local.properties
           
-          # 2. BURASI KRİTİK: Her komutun başına './flutter/bin/' ekliyoruz
+          # 2. Önemli Değişiklik: Gradle'a parametre olarak Flutter yolunu elden veriyoruz
+          # Ayrıca 'flutter' yerine indirdiğimiz klasördeki bin'i kullanıyoruz
           ./flutter/bin/flutter clean
           ./flutter/bin/flutter pub get
           
-          # 3. Build komutunu da tam yol ile çalıştırıyoruz
-          ./flutter/bin/flutter build appbundle --release --no-tree-shake-icons
+          # 3. Build komutu (Gradle'a Flutter kök dizinini zorla tanıtıyoruz)
+          ./flutter/bin/flutter build appbundle --release --no-tree-shake-icons \
+            --dart-define=FLUTTER_ROOT=$GITHUB_WORKSPACE/flutter
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
