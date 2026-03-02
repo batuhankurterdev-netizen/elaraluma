@@ -127,8 +127,8 @@ class _StardustGameScreenState extends State<StardustGameScreen> {
                 icon: Icon(Icons.video_library),
                 label: Text('Reklam İzle\n+10 Bonus Yıldız'),
                 style: ElevatedButton.styleFrom(
-                  primary: Color(0xFF4ecdc4),
-                  onPrimary: Colors.white,
+                  backgroundColor: Color(0xFF4ecdc4),
+                  foregroundColor: Colors.white,
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 ),
               ),
