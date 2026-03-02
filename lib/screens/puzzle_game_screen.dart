@@ -152,7 +152,7 @@ class _PuzzleGameScreenState extends State<PuzzleGameScreen> {
                 },
                 style: ElevatedButton.styleFrom(
                  backgroundColor: Color(0xFFFFD700),
-                  onPrimary: Color(0xFF4A148C),
+                 foregroundColor: Color(0xFF4A148C),
                   padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
