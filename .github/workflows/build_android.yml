@@ -21,23 +21,23 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          # BURASI ÇOK KRİTİK: Sürümü tırnak içinde ve net yazıyoruz
+          # Sürümü tam bu şekilde (tırnaklı) yazıyoruz:
           flutter-version: '3.24.5' 
           channel: 'stable'
-          cache: false # Önbelleği tamamen kapatıyoruz, zorla temiz kurulum yaptıracağız
+          cache: false # İŞTE BURASI KRİTİK: Hafızayı tamamen kapatıyoruz!
 
-      - name: Flutter Clean & Pub Get
+      - name: Full Clean
         run: |
           flutter clean
           flutter pub cache clean --force
           flutter pub get
 
       - name: Build appbundle
-        # Keystore (Şifre) bilgilerini bozmadan buraya ekliyoruz:
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        # --no-pub ekleyerek GitHub'ın kafasına göre sürüm değiştirmesini engelliyoruz
         run: flutter build appbundle --release --no-tree-shake-icons --no-pub
 
       - name: Upload AAB
