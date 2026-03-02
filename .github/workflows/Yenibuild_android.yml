@@ -13,14 +13,10 @@ jobs:
 
       - name: Force Manual Flutter Install
         run: |
-          # GitHub'ın kendi Flutter'ını görmezden gelmesi için manuel indiriyoruz
           git clone https://github.com/flutter/flutter.git -b 3.24.5 --depth 1
-          # PATH ayarını GitHub'ın yüklü olan sürümünün önüne geçecek şekilde yapıyoruz
+          # Path ayarını bu adımda yapıyoruz
           echo "$GITHUB_WORKSPACE/flutter/bin" >> $GITHUB_PATH
           echo "$GITHUB_WORKSPACE/flutter/bin/cache/dart-sdk/bin" >> $GITHUB_PATH
-
-      - name: Verify Flutter Version
-        run: flutter --version # Burada 3.24.5 yazmazsa sistemde bir sorun var demektir
 
       - name: Build appbundle
         env:
@@ -28,6 +24,13 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         run: |
-          flutter pub get
-          # Doğrudan indirdiğimiz flutter ile build alıyoruz
-          flutter build appbundle --release --no-tree-shake-icons
+          # DİKKAT: Tam yol belirterek sistemi zorluyoruz
+          ./flutter/bin/flutter clean
+          ./flutter/bin/flutter pub get
+          ./flutter/bin/flutter build appbundle --release --no-tree-shake-icons
+          
+      - name: Upload AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: build/app/outputs/bundle/release/app-release.aab
