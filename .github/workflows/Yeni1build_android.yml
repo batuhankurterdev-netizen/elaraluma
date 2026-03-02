@@ -1,4 +1,4 @@
-name: Yeni1Build Android AAB
+name: Build Android AAB
 
 on:
   workflow_dispatch:
@@ -9,37 +9,46 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # 1️⃣ Repo'yu çek
       - uses: actions/checkout@v4
 
-      - name: Force Manual Flutter Install
+      # 2️⃣ Flutter SDK'yı indir
+      - name: Install Flutter
         run: |
-          # Flutter'ı tertemiz indiriyoruz
-          git clone https://github.com/flutter/flutter.git -b 3.24.5 --depth 1
-          # PATH'e ekliyoruz ama garanti olsun diye aşağıda tam yol kullanacağız
+          git clone https://github.com/flutter/flutter.git -b 3.24.5 --depth 1 $GITHUB_WORKSPACE/flutter
           echo "$GITHUB_WORKSPACE/flutter/bin" >> $GITHUB_PATH
           echo "FLUTTER_ROOT=$GITHUB_WORKSPACE/flutter" >> $GITHUB_ENV
+          flutter --version
 
-      - name: Build appbundle
+      # 3️⃣ Android SDK lisanslarını kabul et
+      - name: Accept Android licenses
+        run: yes | /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+
+      # 4️⃣ Flutter temizleme ve dependency yükleme
+      - name: Flutter clean & pub get
+        run: |
+          flutter clean
+          flutter pub get
+
+      # 5️⃣ local.properties oluştur
+      - name: Setup local.properties
+        run: |
+          echo "flutter.sdk=$GITHUB_WORKSPACE/flutter" > android/local.properties
+          echo "sdk.dir=/usr/local/lib/android/sdk" >> android/local.properties
+
+      # 6️⃣ Build AAB
+      - name: Build AppBundle
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         run: |
-          # 1. local.properties dosyasını temiz ve kesin yollarla oluştur
-          echo "flutter.sdk=$GITHUB_WORKSPACE/flutter" > android/local.properties
-          echo "sdk.dir=/usr/local/lib/android/sdk" >> android/local.properties
-          
-          # 2. Önemli Değişiklik: Gradle'a parametre olarak Flutter yolunu elden veriyoruz
-          # Ayrıca 'flutter' yerine indirdiğimiz klasördeki bin'i kullanıyoruz
-          ./flutter/bin/flutter clean
-          ./flutter/bin/flutter pub get
-          
-          # 3. Build komutu (Gradle'a Flutter kök dizinini zorla tanıtıyoruz)
-          ./flutter/bin/flutter build appbundle --release --no-tree-shake-icons \
+          flutter build appbundle --release --no-tree-shake-icons \
             --dart-define=FLUTTER_ROOT=$GITHUB_WORKSPACE/flutter
 
-      - name: Upload Artifact
+      # 7️⃣ Upload artifact
+      - name: Upload AppBundle Artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: build/app/outputs/bundle/release/app-release.aab
+          path: android/app/build/outputs/bundle/release/app-release.aab
