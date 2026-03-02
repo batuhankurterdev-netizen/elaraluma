@@ -1,4 +1,4 @@
-name: YeniBuild Android AAB
+name: Yeni1Build Android AAB
 
 on:
   workflow_dispatch:
@@ -13,10 +13,11 @@ jobs:
 
       - name: Force Manual Flutter Install
         run: |
-          # 1. Flutter'ı tertemiz indiriyoruz
+          # Flutter'ı tertemiz indiriyoruz
           git clone https://github.com/flutter/flutter.git -b 3.24.5 --depth 1
-          # 2. PATH'e ekliyoruz (ama güvenmiyoruz, aşağıda tam yol kullanacağız)
+          # PATH'e ekliyoruz ama garanti olsun diye aşağıda tam yol kullanacağız
           echo "$GITHUB_WORKSPACE/flutter/bin" >> $GITHUB_PATH
+          echo "FLUTTER_ROOT=$GITHUB_WORKSPACE/flutter" >> $GITHUB_ENV
 
       - name: Build appbundle
         env:
@@ -24,16 +25,15 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         run: |
-          # 1. BOŞ OLAN DOSYAYI BURADA OTOMATİK DOLDURUYORUZ
-          # Bu satır Android'e Flutter'ın tam olarak nerede olduğunu söyler
+          # 1. local.properties dosyasını OTOMATİK dolduruyoruz
           echo "flutter.sdk=$GITHUB_WORKSPACE/flutter" > android/local.properties
           echo "sdk.dir=/usr/local/lib/android/sdk" >> android/local.properties
           
-          # 2. KOMUTLARI TAM YOL İLE ÇALIŞTIRIYORUZ
+          # 2. BURASI KRİTİK: Her komutun başına './flutter/bin/' ekliyoruz
           ./flutter/bin/flutter clean
           ./flutter/bin/flutter pub get
           
-          # 3. BUILD BAŞLAT
+          # 3. Build komutunu da tam yol ile çalıştırıyoruz
           ./flutter/bin/flutter build appbundle --release --no-tree-shake-icons
 
       - name: Upload Artifact
