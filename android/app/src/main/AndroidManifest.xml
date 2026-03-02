@@ -1,5 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mukaddes.elaraluma">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
    
    <!-- İnternet erişimi için izin -->
    <uses-permission android:name="android.permission.INTERNET"/>
