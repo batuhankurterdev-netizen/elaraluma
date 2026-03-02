@@ -23,10 +23,12 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          # Gradle'a Flutter'ın yerini bu çevresel değişkenle zorla öğretiyoruz:
+          FLUTTER_ROOT: ${{ github.workspace }}/flutter 
         run: |
-          # DİKKAT: Tam yol belirterek sistemi zorluyoruz
           ./flutter/bin/flutter clean
           ./flutter/bin/flutter pub get
+          # 'flutter' komutu yerine tam yolu kullanarak build alıyoruz
           ./flutter/bin/flutter build appbundle --release --no-tree-shake-icons
           
       - name: Upload AAB
