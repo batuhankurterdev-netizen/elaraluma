@@ -10,11 +10,12 @@ android {
     compileSdk 34
 
     // GitHub'dan gelen şifreleri buraya bağlıyoruz (Bozağız dediğin yer burası, düzeliyor):
-    signingConfigs {
+   signingConfigs {
         release {
             keyAlias System.getenv("KEY_ALIAS")
             keyPassword System.getenv("KEY_PASSWORD")
-            storeFile rootProject.file('key.jks')
+            // BURAYI ŞÖYLE DEĞİŞTİR (Dosyayı doğru yerde araması için):
+            storeFile rootProject.file('app/key.jks') 
             storePassword System.getenv("KEYSTORE_PASSWORD")
         }
     }
