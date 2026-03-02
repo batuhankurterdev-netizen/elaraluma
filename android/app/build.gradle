@@ -5,11 +5,22 @@ plugins {
 }
 
 android {
-    namespace "com.batuhankurter.elaraluma"
+    // BURASI ÖNEMLİ: Manifest dosyanla aynı olmalı
+    namespace "com.mukaddes.elaraluma" 
     compileSdk 34
 
+    // GitHub'dan gelen şifreleri buraya bağlıyoruz (Bozağız dediğin yer burası, düzeliyor):
+    signingConfigs {
+        release {
+            keyAlias System.getenv("KEY_ALIAS")
+            keyPassword System.getenv("KEY_PASSWORD")
+            storeFile rootProject.file('key.jks')
+            storePassword System.getenv("KEYSTORE_PASSWORD")
+        }
+    }
+
     defaultConfig {
-        applicationId "com.batuhankurter.elaraluma"
+        applicationId "com.mukaddes.elaraluma"
         minSdk 24
         targetSdk 34
         versionCode 1
@@ -18,7 +29,11 @@ android {
 
     buildTypes {
         release {
-            signingConfig signingConfigs.debug
+            // BURAYI DEĞİŞTİRDİK: debug yerine release imzasını kullanacak
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
