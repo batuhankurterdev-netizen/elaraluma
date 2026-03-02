@@ -142,7 +142,7 @@ class MainMenuScreen extends StatelessWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Color(0xFFFFD700),
+                      backgroundColor: Color(0xFFFFD700),
                       onPrimary: Color(0xFF4A148C),
                       padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                       shape: RoundedRectangleBorder(
