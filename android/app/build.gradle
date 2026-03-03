@@ -49,5 +49,6 @@ flutter {
 }
 
 dependencies {
+    implementation 'androidx.annotation:annotation:1.6.0'
     // Flutter pluginleri pubspec.yaml'dan geliyor, burada dependency eklemeye gerek yok
 }
