@@ -38,12 +38,28 @@ jobs:
           # Eğer kod üretimi (build_runner) kullanıyorsan buraya ekleyebilirsin
 
       # 5️⃣ Build AAB
-      - name: Build AppBundle
+      - name: Build appbundle
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-        run: flutter build appbundle --release --no-tree-shake-icons
+        run: |
+          # 1. Android'e Flutter'ın yerini zorla öğretiyoruz
+          echo "flutter.sdk=$GITHUB_WORKSPACE/flutter" > android/local.properties
+          echo "sdk.dir=/usr/local/lib/android/sdk" >> android/local.properties
+          
+          # 2. BURASI ÇOK KRİTİK: 'flutter' değil, './flutter/bin/flutter' kullanıyoruz
+          # Ve Gradle'ın eski/bozuk kütüphane kayıtlarını siliyoruz
+          ./flutter/bin/flutter clean
+          ./flutter/bin/flutter pub get
+          
+          # 3. Android tarafındaki GeneratedPluginRegistrant'ı zorla yeniletiyoruz
+          cd android
+          ./gradlew clean
+          cd ..
+          
+          # 4. Build komutu (Tam yol kullanarak)
+          ./flutter/bin/flutter build appbundle --release --no-tree-shake-icons
 
       # 6️⃣ Dosyayı Kaydet
       - name: Upload AppBundle Artifact
