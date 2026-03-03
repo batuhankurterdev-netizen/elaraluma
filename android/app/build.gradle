@@ -6,25 +6,25 @@ plugins {
 
 android {
     namespace "com.mukaddes.elaraluma"
-    compileSdk 34
-
+    compileSdk 33  // 34 → 33
+    
     signingConfigs {
         release {
             keyAlias System.getenv("KEY_ALIAS")
             keyPassword System.getenv("KEY_PASSWORD")
-            storeFile file("elara-key.keystore") // CI ile uyumlu path
+            storeFile file("elara-key.keystore")
             storePassword System.getenv("KEYSTORE_PASSWORD")
         }
     }
-
+    
     defaultConfig {
         applicationId "com.mukaddes.elaraluma"
-        minSdk 24
-        targetSdk 36
+        minSdk 21  // 24 → 21
+        targetSdk 33  // 36 → 33
         versionCode 1
         versionName "1.0"
     }
-
+    
     buildTypes {
         release {
             signingConfig signingConfigs.release
@@ -33,14 +33,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
+    
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_11  // 17 → 11
+        targetCompatibility JavaVersion.VERSION_11
     }
-
+    
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "11"  // 17 → 11
     }
 }
 
@@ -50,5 +50,4 @@ flutter {
 
 dependencies {
     implementation 'androidx.annotation:annotation:1.6.0'
-    // Flutter pluginleri pubspec.yaml'dan geliyor, burada dependency eklemeye gerek yok
 }
