@@ -26,28 +26,20 @@ jobs:
         run: |
           flutter clean
           flutter pub get
-          flutter pub upgrade
       
       - name: Generate Local Properties
         run: |
           echo "flutter.sdk=$FLUTTER_HOME" > android/local.properties
           echo "sdk.dir=$ANDROID_SDK_ROOT" >> android/local.properties
       
-      - name: Setup Keystore
-        run: |
-          mkdir -p android/app
-          cp elara-key.keystore android/app/
-      
-      - name: Create key.properties
-        run: |
-          cat > android/key.properties << EOF
-          storeFile=app/elara-key.keystore
-          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
-          keyAlias=${{ secrets.KEY_ALIAS }}
-          keyPassword=${{ secrets.KEY_PASSWORD }}
-          EOF
+      - name: Copy Keystore to Correct Location
+        run: cp elara-key.keystore android/app/
       
       - name: Build AAB
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         run: flutter build appbundle --release --no-tree-shake-icons
       
       - name: Upload Artifact
