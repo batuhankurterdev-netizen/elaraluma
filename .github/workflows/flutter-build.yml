@@ -11,22 +11,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Repo'yu checkout et
       - name: Checkout
         uses: actions/checkout@v4
 
+      # 2️⃣ Flutter'ı kur
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.24.5'
           channel: 'stable'
 
-      - name: Flutter clean & pub get
+      # 3️⃣ Java versiyonunu kontrol et
+      - name: Check Java
+        run: java -version
+
+      # 4️⃣ Flutter temizle ve pluginleri sıfırla
+      - name: Flutter clean & reset GeneratedPluginRegistrant
         run: |
           flutter clean
-          flutter pub get
-          # GeneratedPluginRegistrant'ı sıfırla
           rm -f android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
 
+      # 5️⃣ Flutter pub get ve cache repair
+      - name: Flutter pub get & repair cache
+        run: |
+          flutter pub cache repair
+          flutter pub get
+
+      # 6️⃣ Build AAB
       - name: Build appbundle
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -34,6 +46,7 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         run: flutter build appbundle --release --no-tree-shake-icons
 
+      # 7️⃣ Artifact yükle
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
