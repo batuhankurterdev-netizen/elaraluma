@@ -4,21 +4,22 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
+  sdk: '>=3.3.0 <4.0.0'  # Flutter 3.24+ için
 
 dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.6
-  audioplayers: ^6.0.0
+  audioplayers: ^2.0.5        # V2 embedding uyumlu
   table_calendar: ^3.1.2
-  google_mobile_ads: ^5.1.0
-  shared_preferences: ^2.2.2
-  
+  google_mobile_ads: ^3.0.0   # V2 embedding uyumlu
+  shared_preferences: ^2.1.1  # V2 embedding uyumlu
+  path_provider: ^2.0.15      # Yeni plugin ekledim, WebView ve dosya yolları için
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^1.0.0
+  flutter_lints: ^2.0.1       # Güncel linter
 
 flutter:
   uses-material-design: true
