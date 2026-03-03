@@ -1,5 +1,4 @@
 name: YeniBuild Android AAB
-
 on:
   workflow_dispatch:
   push:
@@ -10,33 +9,37 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup Flutter and Build in One Go
+      
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.5'
+          channel: 'stable'
+      
+      - name: Get Dependencies
+        run: |
+          flutter clean
+          flutter pub get
+          flutter pub upgrade
+      
+      - name: Generate Local Properties
+        run: |
+          echo "flutter.sdk=$FLUTTER_HOME" > android/local.properties
+          echo "sdk.dir=$ANDROID_SDK_ROOT" >> android/local.properties
+      
+      - name: Build AAB
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-        run: |
-          # 1. Flutter'ı indir ve tam yolunu değişkene kaydet
-          git clone https://github.com/flutter/flutter.git -b 3.24.5 --depth 1
-          FLUTTER_PATH=$(pwd)/flutter
-          export PATH="$PATH:$FLUTTER_PATH/bin"
-          
-          # 2. Android'e Flutter'ın yerini "asla kaçamayacağı" şekilde yazdır
-          echo "flutter.sdk=$FLUTTER_PATH" > android/local.properties
-          echo "sdk.dir=/usr/local/lib/android/sdk" >> android/local.properties
-          
-          # 3. Kütüphane bağlarını zorla yenile
-          flutter clean
-          flutter pub get
-          flutter pub upgrade
-          
-          # 4. GeneratedPluginRegistrant dosyasını siliyoruz ki doğru yollarla baştan oluşsun
-          rm -f android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
-          
-          # 5. Build komutunu çalıştır
-          flutter build appbundle --release --no-tree-shake-icons
-
+        run: flutter build appbundle --release --no-tree-shake-icons
+      
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
