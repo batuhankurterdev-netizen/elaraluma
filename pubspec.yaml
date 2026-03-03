@@ -4,22 +4,22 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.3.0 <4.0.0'  # Flutter 3.24+ için
+  sdk: '>=3.2.0 <4.0.0'  # Flutter 3.24+ için
 
 dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.6
-  audioplayers: ^6.0.0       # V6 ile embedding V2 uyumlu
+  audioplayers: ^0.20.1       # V6 ile embedding V2 uyumlu
   table_calendar: ^3.1.2
-  google_mobile_ads: ^5.1.0  # V5 ile embedding V2 uyumlu
-  shared_preferences: ^2.2.2
+  google_mobile_ads: ^2.3.0  # V5 ile embedding V2 uyumlu
+  shared_preferences: ^2.0.18
   webview_flutter: ^4.1.0    # V4 ile embedding V2 uyumlu
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.1       # Güncel linter
+  flutter_lints: ^1.0.0       # Güncel linter
 
 flutter:
   uses-material-design: true
