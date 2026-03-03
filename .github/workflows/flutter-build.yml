@@ -1,10 +1,10 @@
 name: Build Flutter AAB
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   build:
@@ -14,18 +14,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 1. GitHub'ın bozuk sürümünü kullanmaması için sürümü sabitliyoruz
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.5' 
+          flutter-version: '3.24.5'
           channel: 'stable'
-          cache: false
 
-      - name: Flutter pub get
-        run: flutter pub get
+      - name: Flutter clean & pub get
+        run: |
+          flutter clean
+          flutter pub get
+          # GeneratedPluginRegistrant'ı sıfırla
+          rm -f android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
 
-      # 2. Build adımına senin Secret'larını (şifrelerini) tanıtıyoruz
       - name: Build appbundle
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
