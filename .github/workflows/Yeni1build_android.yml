@@ -22,10 +22,14 @@ jobs:
           flutter-version: '3.24.5'
           channel: 'stable'
       
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
-        with:
-          gradle-version: '8.0'
+      - name: Pre-download Gradle 8.0
+        run: |
+          mkdir -p ~/.gradle/wrapper/dists
+          cd ~/.gradle/wrapper/dists
+          wget -q https://services.gradle.org/distributions/gradle-8.0-all.zip
+          mkdir -p gradle-8.0-all/gradle-8.0
+          unzip -q gradle-8.0-all.zip -d gradle-8.0-all/gradle-8.0/
+          rm gradle-8.0-all.zip
       
       - name: Get Dependencies
         run: |
