@@ -18,7 +18,7 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         run: |
           # 1. Flutter'ı indir ve tam yolunu değişkene kaydet
-          git clone https://github.com/flutter/flutter.git --branch 3.34.0-stable --depth 1
+          git clone https://github.com/flutter/flutter.git --branch 3.24.5-stable --depth 1
           FLUTTER_PATH=$(pwd)/flutter
           export PATH="$PATH:$FLUTTER_PATH/bin"
           
