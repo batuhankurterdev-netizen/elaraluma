@@ -29,6 +29,7 @@ jobs:
           # 3. Kütüphane bağlarını zorla yenile
           flutter clean
           flutter pub get
+          flutter pub upgrade
           
           # 4. GeneratedPluginRegistrant dosyasını siliyoruz ki doğru yollarla baştan oluşsun
           rm -f android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
