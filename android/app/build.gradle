@@ -12,7 +12,7 @@ android {
         release {
             keyAlias System.getenv("KEY_ALIAS")
             keyPassword System.getenv("KEY_PASSWORD")
-            storeFile rootProject.file('../elara-key.keystore') // CI ile uyumlu path
+            storeFile file("elara-key.keystore") // CI ile uyumlu path
             storePassword System.getenv("KEYSTORE_PASSWORD")
         }
     }
