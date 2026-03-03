@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.6
-  audioplayers: ^2.0.5        # V2 embedding uyumlu
+  audioplayers: ^0.21.1         # V2 embedding uyumlu
   table_calendar: ^3.1.2
   google_mobile_ads: ^3.0.0   # V2 embedding uyumlu
   shared_preferences: ^2.1.1  # V2 embedding uyumlu
