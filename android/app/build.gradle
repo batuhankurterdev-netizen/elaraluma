@@ -5,17 +5,14 @@ plugins {
 }
 
 android {
-    // BURASI ÖNEMLİ: Manifest dosyanla aynı olmalı
-    namespace "com.mukaddes.elaraluma" 
+    namespace "com.mukaddes.elaraluma"
     compileSdk 34
 
-    // GitHub'dan gelen şifreleri buraya bağlıyoruz (Bozağız dediğin yer burası, düzeliyor):
-   signingConfigs {
+    signingConfigs {
         release {
             keyAlias System.getenv("KEY_ALIAS")
             keyPassword System.getenv("KEY_PASSWORD")
-            // BURAYI ŞÖYLE DEĞİŞTİR (Dosyayı doğru yerde araması için):
-            storeFile rootProject.file('../elara-key.keystore') 
+            storeFile rootProject.file('elara-key.keystore') // CI ile uyumlu path
             storePassword System.getenv("KEYSTORE_PASSWORD")
         }
     }
@@ -30,7 +27,6 @@ android {
 
     buildTypes {
         release {
-            // BURAYI DEĞİŞTİRDİK: debug yerine release imzasını kullanacak
             signingConfig signingConfigs.release
             minifyEnabled true
             shrinkResources true
@@ -53,4 +49,5 @@ flutter {
 }
 
 dependencies {
+    // Flutter pluginleri pubspec.yaml'dan geliyor, burada dependency eklemeye gerek yok
 }
