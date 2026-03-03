@@ -1,52 +1,59 @@
 name: Build Flutter AAB
-
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
+  workflow_dispatch
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       # 1️⃣ Repo'yu checkout et
       - name: Checkout
         uses: actions/checkout@v4
-
-      # 2️⃣ Flutter'ı kur
+      
+      # 2️⃣ Java 11 kur
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      
+      # 3️⃣ Flutter'ı kur
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.24.5'
           channel: 'stable'
-
-      # 3️⃣ Java versiyonunu kontrol et
-      - name: Check Java
-        run: java -version
-
-      # 4️⃣ Flutter temizle ve pluginleri sıfırla
-      - name: Flutter clean & reset GeneratedPluginRegistrant
+      
+      # 4️⃣ Android local.properties oluştur
+      - name: Create local.properties
         run: |
-          flutter clean
-          rm -f android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
-
-      # 5️⃣ Flutter pub get ve cache repair
-      - name: Flutter pub get & repair cache
-        run: |
-          flutter pub cache repair
-          flutter pub get
-
-      # 6️⃣ Build AAB
+          echo "flutter.sdk=$FLUTTER_HOME" > android/local.properties
+          echo "sdk.dir=$ANDROID_SDK_ROOT" >> android/local.properties
+      
+      # 5️⃣ Flutter temizle
+      - name: Flutter clean
+        run: flutter clean
+      
+      # 6️⃣ Pub get
+      - name: Flutter pub get
+        run: flutter pub get
+      
+      # 7️⃣ Keystore kopyala
+      - name: Copy keystore
+        run: cp elara-key.keystore android/app/
+      
+      # 8️⃣ Build AAB
       - name: Build appbundle
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         run: flutter build appbundle --release --no-tree-shake-icons
-
-      # 7️⃣ Artifact yükle
+      
+      # 9️⃣ Artifact yükle
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
